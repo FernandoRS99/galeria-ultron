@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.log
+*.zip
+*.ogg
+*.wav
+*.mp3
+*.dpapi
+.env*
