@@ -1,20 +1,664 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#080b11"><title>Galeria Ultron · Áudios locais</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; media-src blob:; connect-src 'none'; img-src data:; object-src 'none'; base-uri 'none'">
-<style>.listen{background:#f5665e;color:#10151a;border:0;border-radius:6px;padding:11px 16px;font:inherit;cursor:pointer}.favorite{border:0;background:transparent;color:inherit;cursor:pointer;padding:0}.localbox{padding:24px;border:1px solid #453130;border-radius:12px;margin-bottom:26px;background:#151920}.localbox p{color:#a2adbe}.localbox button{background:#f5665e;border:0;padding:12px 20px;border-radius:6px;color:#10151a;font-weight:700;cursor:pointer}
-:root{color-scheme:dark;--bg:#080b11;--panel:#121720;--line:#262d38;--text:#edf1f7;--muted:#a2adbe;--accent:#f5665e;--gold:#e8b96e}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}button,input,select{font:inherit}button,a{touch-action:manipulation}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:4px}.shell{max-width:1380px;margin:auto;padding:0 32px}header{border-bottom:1px solid var(--line)}.top{min-height:86px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-weight:750;letter-spacing:.2em;font-size:15px}.brand em{font-style:normal;color:var(--accent)}.access{color:var(--muted);font-size:14px}.hero{padding:64px 0 38px;display:grid;grid-template-columns:1fr auto;gap:32px}.eyebrow{color:var(--accent);letter-spacing:.16em;font-size:14px;text-transform:uppercase;font-weight:650}h1{font-size:clamp(40px,6vw,72px);letter-spacing:-.055em;line-height:1.03;margin:14px 0 20px;font-weight:650}h1 span{color:var(--muted)}.intro{max-width:650px;color:var(--muted);margin:0}.stats{align-self:end;border-left:1px solid var(--line);padding-left:32px;min-width:180px}.stats strong{font-size:44px;font-weight:500;line-height:1}.stats p{color:var(--muted);margin:8px 0 0;font-size:14px}.sync{display:flex;gap:14px;align-items:center;margin:0 0 32px;color:var(--muted);font-size:14px}.sync span{display:inline-block;width:8px;height:8px;border-radius:50%;background:#747d8c}.sync.live span{background:#74c7a7}.sync button{margin-left:auto;background:transparent;border:1px solid var(--line);border-radius:6px;color:var(--text);padding:8px 14px;cursor:pointer}.feature{background:linear-gradient(110deg,#211d20,#151920);border:1px solid #453130;border-radius:14px;padding:28px;margin-bottom:40px;display:grid;grid-template-columns:1.1fr 1fr;gap:32px;align-items:center}.feature h2{font-size:28px;line-height:1.2;letter-spacing:-.035em;margin:10px 0}.feature p{color:var(--muted);margin:10px 0 0}.feature small{font-size:14px;color:var(--gold)}audio{width:100%;height:42px}.feature audio{margin-top:10px}.toolbar{display:flex;gap:16px;align-items:center;margin:0 0 26px;flex-wrap:wrap}.tabs{display:flex;gap:6px;flex-wrap:wrap}.tabs button{background:transparent;border:1px solid transparent;color:var(--muted);padding:9px 14px;border-radius:6px;cursor:pointer}.tabs button.active{color:var(--text);border-color:var(--line);background:var(--panel)}.search{margin-left:auto;min-width:260px;flex:1;max-width:420px}.search input{width:100%;padding:12px 14px;background:var(--panel);border:1px solid var(--line);border-radius:7px;color:var(--text)}select{background:var(--panel);color:var(--text);padding:11px;border:1px solid var(--line);border-radius:7px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px;display:flex;flex-direction:column;min-width:0}.meta{display:flex;justify-content:space-between;gap:10px;font-size:14px;color:var(--muted)}.kind{color:var(--gold)}.card h3{font-size:19px;line-height:1.3;margin:15px 0 12px;font-weight:600}.transcript{font-size:15px;color:var(--muted);margin:0 0 20px;max-height:95px;overflow:auto}.card audio{margin-top:auto}.card details{margin-top:14px;font-size:14px;color:var(--muted)}.card details p{font-size:15px;max-height:240px;overflow:auto}.card-foot{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-top:14px;font-size:14px;color:var(--muted)}.card-foot a{color:var(--text);text-decoration:none;border-bottom:1px solid #596272}.empty{grid-column:1/-1;border:1px dashed var(--line);border-radius:10px;padding:55px 25px;text-align:center;color:var(--muted)}footer{border-top:1px solid var(--line);margin-top:52px;padding:24px 0 120px;color:var(--muted);font-size:14px}.playerbar{position:fixed;bottom:0;left:0;right:0;background:#10151ff5;backdrop-filter:blur(12px);border-top:1px solid #404953;padding:15px 32px;display:flex;align-items:center;gap:25px;z-index:2}.playerbar[hidden]{display:none}.playerbar strong{font-size:15px;display:block}.playerbar small{color:var(--muted)}.playerbar audio{max-width:650px;margin-left:auto}.playerbar button{border:0;background:transparent;color:var(--muted);font-size:24px;cursor:pointer}.count{color:var(--muted);font-size:14px;margin:0 0 15px}@media(max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.shell{padding:0 20px}.top{min-height:72px}.access{max-width:120px;text-align:right;font-size:13px}.hero{padding:40px 0 28px;grid-template-columns:1fr}.stats{display:none}.feature{grid-template-columns:1fr;gap:20px;padding:22px}.grid{grid-template-columns:1fr}.search{margin-left:0;max-width:none;min-width:100%;order:2}.toolbar select{margin-left:auto}.sync{align-items:flex-start}.sync button{white-space:nowrap}.playerbar{padding:12px 18px;gap:12px;flex-wrap:wrap}.playerbar audio{width:100%;max-width:none}.playerbar button{margin-left:auto}}
-.selection-panel{background:#151920;border:1px solid #453130;border-radius:12px;padding:22px;margin:12px 0 28px}.selection-panel p{color:var(--muted);font-size:15px}.selection-panel .toolbar{margin-bottom:0}.mark-removal{display:flex;align-items:center;gap:10px;margin:18px 0 0;padding:12px 0;cursor:pointer;color:#ffd6d2;font-size:15px}.mark-removal input{width:21px;height:21px;accent-color:var(--accent);cursor:pointer}.card.marked{border-color:var(--accent);background:#251b20}.listen:disabled{opacity:.4;cursor:default}.listen.secondary{background:#29303b;color:var(--text)}
-</style></head><body>
-<header><div class="shell top"><div class="brand"><em>ULTRON</em> / ARQUIVO DE VOZ</div><div class="access">Biblioteca local do Sr. Stark</div></div></header>
-<main class="shell"><section class="hero"><div><div class="eyebrow">Galeria de áudios</div><h1>A voz.<br><span>Sem intermediários.</span></h1><p class="intro">Recortes originais, diálogos completos e prévias. Ouça, compare e encontre o trecho certo para cada composição.</p></div><aside class="stats"><strong id="total">—</strong><p>áudios no seu arquivo<br><span id="minutes">Aguardando catálogo</span></p></aside></section>
-<section class="localbox"><strong>Toda a galeria. Os áudios ficam neste computador.</strong><p>Selecione a pasta <b>audio</b>, dentro de <b>output</b>, para reunir personagens, bordões, expansão PT-BR e catálogos de revisão. A página pede somente leitura e não envia arquivos à internet.</p><button id="connect">Conectar pasta local</button><p id="folderName">Para mais de 1.000 áudios, selecione output\audio. Se conectou apenas ultron, clique em Trocar pasta.</p></section><div class="sync" id="sync" role="status"><span></span><div id="syncText">Conecte a pasta para iniciar a leitura local.</div><button id="refresh">Atualizar agora</button></div>
-<section class="feature" id="featured" hidden><div><div class="eyebrow">Diálogo em destaque</div><h2>Ultron encontra o Visão.</h2><p>A cena completa e os trechos que você pediu, reunidos na mesma galeria.</p></div><div><small id="featuredTime"></small><button id="featuredPlay" class="listen">Ouvir diálogo completo</button></div></section>
-<div class="toolbar"><nav class="tabs" aria-label="Filtrar tipo"><button class="active" data-kind="all">Todos</button><button data-kind="recorte">Recortes</button><button data-kind="dialogo">Diálogos</button><button data-kind="revisao">Em revisão</button><button data-kind="favorites">Favoritos</button></nav><label class="search"><input id="search" type="search" placeholder="Buscar por personagem, título ou fala…" aria-label="Buscar áudios"></label><select id="sort" aria-label="Ordenar áudios"><option value="title">Nome</option><option value="long">Mais longos</option><option value="new">Mais recentes</option></select></div>
-<div class="toolbar"><select id="author" aria-label="Filtrar por personagem"><option value="">Todos os personagens</option></select><select id="collection" aria-label="Filtrar por coleção"><option value="">Todas as coleções</option></select><select id="minDuration" aria-label="Duração mínima"><option value="0">Qualquer duração</option><option value="5">A partir de 5 segundos</option><option value="10">A partir de 10 segundos</option><option value="15">A partir de 15 segundos</option><option value="30">A partir de 30 segundos</option></select></div>
-<div class="toolbar"><select id="language" aria-label="Filtrar por idioma"><option value="">Todos os idiomas</option><option value="en">Inglês</option><option value="pt">Português</option><option value="es">Espanhol</option><option value="ja">Japonês</option><option value="none">Sem fala</option><option value="unknown">Idioma não informado</option></select><button id="markFiltered" class="listen">Marcar todos deste filtro</button></div>
-<section class="selection-panel" aria-label="Seleção para remoção"><strong id="selectionCount" role="status">0 áudios marcados para remover</strong><p>Ouça e marque os áudios abaixo. As marcações ficam neste navegador. O idioma vem do catálogo e pode exigir conferência.</p><div class="toolbar"><button id="exportSelection" class="listen" disabled>Salvar seleção</button><button id="clearSelection" class="listen secondary" disabled>Limpar marcações</button></div><p id="selectionMessage">Salvar a seleção não apaga arquivos nem envia dados à internet.</p></section>
-<p class="count" id="count"></p><section class="grid" id="grid" aria-label="Áudios"><div class="empty">Conecte a pasta local para carregar os áudios.</div></section>
-<p style="text-align:center;margin:28px 0"><button id="loadMore" class="listen" hidden>Carregar mais 60 áudios</button></p>
-<footer>Atualização automática a cada 5 segundos enquanto a aba está visível. Os arquivos são lidos diretamente da pasta autorizada no seu navegador, sem upload. Cópias com o mesmo hash aparecem uma vez. Itens em revisão não significam aprovação ou ativação no bot. Transcrições da galeria podem conter erros.</footer></main>
-<div class="playerbar" id="playerbar" hidden><div><strong id="playingTitle"></strong><small id="playingMeta"></small></div><audio id="mainPlayer" controls></audio><button id="closePlayer" aria-label="Fechar reprodutor">×</button></div>
-<script type="module">/*LOCAL_APPLICATION*/</script></body></html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#080b11">
+    <title>Galeria Ultron · Áudios locais</title>
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; media-src blob:; connect-src 'none'; img-src data:; object-src 'none'; base-uri 'none'">
+    <style>
+        .listen {
+            background: #f5665e;
+            color: #10151a;
+            border: 0;
+            border-radius: 6px;
+            padding: 11px 16px;
+            font: inherit;
+            cursor: pointer
+        }
+
+        .favorite {
+            border: 0;
+            background: transparent;
+            color: inherit;
+            cursor: pointer;
+            padding: 0
+        }
+
+        .localbox {
+            padding: 24px;
+            border: 1px solid #453130;
+            border-radius: 12px;
+            margin-bottom: 26px;
+            background: #151920
+        }
+
+        .localbox p {
+            color: #a2adbe
+        }
+
+        .localbox button {
+            background: #f5665e;
+            border: 0;
+            padding: 12px 20px;
+            border-radius: 6px;
+            color: #10151a;
+            font-weight: 700;
+            cursor: pointer
+        }
+
+        :root {
+            color-scheme: dark;
+            --bg: #080b11;
+            --panel: #121720;
+            --line: #262d38;
+            --text: #edf1f7;
+            --muted: #a2adbe;
+            --accent: #f5665e;
+            --gold: #e8b96e
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font: 16px/1.55 system-ui, -apple-system, Segoe UI, sans-serif
+        }
+
+        button,
+        input,
+        select {
+            font: inherit
+        }
+
+        button,
+        a {
+            touch-action: manipulation
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible {
+            outline: 3px solid var(--gold);
+            outline-offset: 4px
+        }
+
+        .shell {
+            max-width: 1380px;
+            margin: auto;
+            padding: 0 32px
+        }
+
+        header {
+            border-bottom: 1px solid var(--line)
+        }
+
+        .top {
+            min-height: 86px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px
+        }
+
+        .brand {
+            font-weight: 750;
+            letter-spacing: .2em;
+            font-size: 15px
+        }
+
+        .brand em {
+            font-style: normal;
+            color: var(--accent)
+        }
+
+        .access {
+            color: var(--muted);
+            font-size: 14px
+        }
+
+        .hero {
+            padding: 64px 0 38px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 32px
+        }
+
+        .eyebrow {
+            color: var(--accent);
+            letter-spacing: .16em;
+            font-size: 14px;
+            text-transform: uppercase;
+            font-weight: 650
+        }
+
+        h1 {
+            font-size: clamp(40px, 6vw, 72px);
+            letter-spacing: -.055em;
+            line-height: 1.03;
+            margin: 14px 0 20px;
+            font-weight: 650
+        }
+
+        h1 span {
+            color: var(--muted)
+        }
+
+        .intro {
+            max-width: 650px;
+            color: var(--muted);
+            margin: 0
+        }
+
+        .stats {
+            align-self: end;
+            border-left: 1px solid var(--line);
+            padding-left: 32px;
+            min-width: 180px
+        }
+
+        .stats strong {
+            font-size: 44px;
+            font-weight: 500;
+            line-height: 1
+        }
+
+        .stats p {
+            color: var(--muted);
+            margin: 8px 0 0;
+            font-size: 14px
+        }
+
+        .sync {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            margin: 0 0 32px;
+            color: var(--muted);
+            font-size: 14px
+        }
+
+        .sync span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #747d8c
+        }
+
+        .sync.live span {
+            background: #74c7a7
+        }
+
+        .sync button {
+            margin-left: auto;
+            background: transparent;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            color: var(--text);
+            padding: 8px 14px;
+            cursor: pointer
+        }
+
+        .feature {
+            background: linear-gradient(110deg, #211d20, #151920);
+            border: 1px solid #453130;
+            border-radius: 14px;
+            padding: 28px;
+            margin-bottom: 40px;
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 32px;
+            align-items: center
+        }
+
+        .feature h2 {
+            font-size: 28px;
+            line-height: 1.2;
+            letter-spacing: -.035em;
+            margin: 10px 0
+        }
+
+        .feature p {
+            color: var(--muted);
+            margin: 10px 0 0
+        }
+
+        .feature small {
+            font-size: 14px;
+            color: var(--gold)
+        }
+
+        audio {
+            width: 100%;
+            height: 42px
+        }
+
+        .feature audio {
+            margin-top: 10px
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin: 0 0 26px;
+            flex-wrap: wrap
+        }
+
+        .tabs {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap
+        }
+
+        .tabs button {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--muted);
+            padding: 9px 14px;
+            border-radius: 6px;
+            cursor: pointer
+        }
+
+        .tabs button.active {
+            color: var(--text);
+            border-color: var(--line);
+            background: var(--panel)
+        }
+
+        .search {
+            margin-left: auto;
+            min-width: 260px;
+            flex: 1;
+            max-width: 420px
+        }
+
+        .search input {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            color: var(--text)
+        }
+
+        select {
+            background: var(--panel);
+            color: var(--text);
+            padding: 11px;
+            border: 1px solid var(--line);
+            border-radius: 7px
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            min-width: 0
+        }
+
+        .meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--muted)
+        }
+
+        .kind {
+            color: var(--gold)
+        }
+
+        .card h3 {
+            font-size: 19px;
+            line-height: 1.3;
+            margin: 15px 0 12px;
+            font-weight: 600
+        }
+
+        .transcript {
+            font-size: 15px;
+            color: var(--muted);
+            margin: 0 0 20px;
+            max-height: 95px;
+            overflow: auto
+        }
+
+        .card audio {
+            margin-top: auto
+        }
+
+        .card details {
+            margin-top: 14px;
+            font-size: 14px;
+            color: var(--muted)
+        }
+
+        .card details p {
+            font-size: 15px;
+            max-height: 240px;
+            overflow: auto
+        }
+
+        .card-foot {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: center;
+            margin-top: 14px;
+            font-size: 14px;
+            color: var(--muted)
+        }
+
+        .card-foot a {
+            color: var(--text);
+            text-decoration: none;
+            border-bottom: 1px solid #596272
+        }
+
+        .empty {
+            grid-column: 1/-1;
+            border: 1px dashed var(--line);
+            border-radius: 10px;
+            padding: 55px 25px;
+            text-align: center;
+            color: var(--muted)
+        }
+
+        footer {
+            border-top: 1px solid var(--line);
+            margin-top: 52px;
+            padding: 24px 0 120px;
+            color: var(--muted);
+            font-size: 14px
+        }
+
+        .playerbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #10151ff5;
+            backdrop-filter: blur(12px);
+            border-top: 1px solid #404953;
+            padding: 15px 32px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            z-index: 2
+        }
+
+        .playerbar[hidden] {
+            display: none
+        }
+
+        .playerbar strong {
+            font-size: 15px;
+            display: block
+        }
+
+        .playerbar small {
+            color: var(--muted)
+        }
+
+        .playerbar audio {
+            max-width: 650px;
+            margin-left: auto
+        }
+
+        .playerbar button {
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+            font-size: 24px;
+            cursor: pointer
+        }
+
+        .count {
+            color: var(--muted);
+            font-size: 14px;
+            margin: 0 0 15px
+        }
+
+        @media(max-width:1000px) {
+            .grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr))
+            }
+        }
+
+        @media(max-width:650px) {
+            .shell {
+                padding: 0 20px
+            }
+
+            .top {
+                min-height: 72px
+            }
+
+            .access {
+                max-width: 120px;
+                text-align: right;
+                font-size: 13px
+            }
+
+            .hero {
+                padding: 40px 0 28px;
+                grid-template-columns: 1fr
+            }
+
+            .stats {
+                display: none
+            }
+
+            .feature {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 22px
+            }
+
+            .grid {
+                grid-template-columns: 1fr
+            }
+
+            .search {
+                margin-left: 0;
+                max-width: none;
+                min-width: 100%;
+                order: 2
+            }
+
+            .toolbar select {
+                margin-left: auto
+            }
+
+            .sync {
+                align-items: flex-start
+            }
+
+            .sync button {
+                white-space: nowrap
+            }
+
+            .playerbar {
+                padding: 12px 18px;
+                gap: 12px;
+                flex-wrap: wrap
+            }
+
+            .playerbar audio {
+                width: 100%;
+                max-width: none
+            }
+
+            .playerbar button {
+                margin-left: auto
+            }
+        }
+
+        .selection-panel {
+            background: #151920;
+            border: 1px solid #453130;
+            border-radius: 12px;
+            padding: 22px;
+            margin: 12px 0 28px
+        }
+
+        .selection-panel p {
+            color: var(--muted);
+            font-size: 15px
+        }
+
+        .selection-panel .toolbar {
+            margin-bottom: 0
+        }
+
+        .mark-removal {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 18px 0 0;
+            padding: 12px 0;
+            cursor: pointer;
+            color: #ffd6d2;
+            font-size: 15px
+        }
+
+        .mark-removal input {
+            width: 21px;
+            height: 21px;
+            accent-color: var(--accent);
+            cursor: pointer
+        }
+
+        .card.marked {
+            border-color: var(--accent);
+            background: #251b20
+        }
+
+        .listen:disabled {
+            opacity: .4;
+            cursor: default
+        }
+
+        .listen.secondary {
+            background: #29303b;
+            color: var(--text)
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="shell top">
+            <div class="brand"><em>ULTRON</em> / ARQUIVO DE VOZ</div>
+            <div class="access">Biblioteca local do Sr. Stark</div>
+        </div>
+    </header>
+    <main class="shell">
+        <section class="hero">
+            <div>
+                <div class="eyebrow">Galeria de áudios</div>
+                <h1>A voz.<br><span>Sem intermediários.</span></h1>
+                <p class="intro">Recortes originais, diálogos completos e prévias. Ouça, compare e encontre o trecho
+                    certo para cada composição.</p>
+            </div>
+            <aside class="stats"><strong id="total">—</strong>
+                <p>áudios no seu arquivo<br><span id="minutes">Aguardando catálogo</span></p>
+            </aside>
+        </section>
+        <section class="localbox"><strong>Toda a galeria. Os áudios ficam neste computador.</strong>
+            <p>Selecione a pasta <b>audio</b>, dentro de <b>output</b>, para reunir personagens, bordões, expansão PT-BR
+                e catálogos de revisão. A página pede somente leitura e não envia arquivos à internet.</p><button
+                id="connect">Conectar pasta local</button>
+            <p id="folderName">Para mais de 1.000 áudios, selecione output\audio. Se conectou apenas ultron, clique em
+                Trocar pasta.</p>
+        </section>
+        <div class="sync" id="sync" role="status"><span></span>
+            <div id="syncText">Conecte a pasta para iniciar a leitura local.</div><button id="refresh">Atualizar
+                agora</button>
+        </div>
+        <section class="feature" id="featured" hidden>
+            <div>
+                <div class="eyebrow">Diálogo em destaque</div>
+                <h2>Ultron encontra o Visão.</h2>
+                <p>A cena completa e os trechos que você pediu, reunidos na mesma galeria.</p>
+            </div>
+            <div><small id="featuredTime"></small><button id="featuredPlay" class="listen">Ouvir diálogo
+                    completo</button></div>
+        </section>
+        <div class="toolbar">
+            <nav class="tabs" aria-label="Filtrar tipo"><button class="active" data-kind="all">Todos</button><button
+                    data-kind="recorte">Recortes</button><button data-kind="dialogo">Diálogos</button><button
+                    data-kind="revisao">Em revisão</button><button data-kind="favorites">Favoritos</button></nav><label
+                class="search"><input id="search" type="search" placeholder="Buscar por personagem, título ou fala…"
+                    aria-label="Buscar áudios"></label><select id="sort" aria-label="Ordenar áudios">
+                <option value="title">Nome</option>
+                <option value="long">Mais longos</option>
+                <option value="new">Mais recentes</option>
+            </select>
+        </div>
+        <div class="toolbar"><select id="author" aria-label="Filtrar por personagem">
+                <option value="">Todos os personagens</option>
+            </select><select id="collection" aria-label="Filtrar por coleção">
+                <option value="">Todas as coleções</option>
+            </select><select id="minDuration" aria-label="Duração mínima">
+                <option value="0">Qualquer duração</option>
+                <option value="5">A partir de 5 segundos</option>
+                <option value="10">A partir de 10 segundos</option>
+                <option value="15">A partir de 15 segundos</option>
+                <option value="30">A partir de 30 segundos</option>
+            </select></div>
+        <div class="toolbar"><select id="language" aria-label="Filtrar por idioma">
+                <option value="">Todos os idiomas</option>
+                <option value="en">Inglês</option>
+                <option value="pt">Português</option>
+                <option value="es">Espanhol</option>
+                <option value="ja">Japonês</option>
+                <option value="none">Sem fala</option>
+                <option value="unknown">Idioma não informado</option>
+            </select><button id="markFiltered" class="listen">Marcar todos deste filtro</button></div>
+        <section class="selection-panel" aria-label="Seleção para remoção"><strong id="selectionCount" role="status">0
+                áudios marcados para remover</strong>
+            <p>Ouça e marque os áudios abaixo. As marcações ficam neste navegador. O idioma vem do catálogo e pode
+                exigir conferência.</p>
+            <div class="toolbar">
+                <button id="exportSelection" class="listen" disabled>Salvar seleção</button>
+                <button id="deleteSelected" class="listen" disabled>Apagar selecionados</button>
+                <button id="clearSelection" class="listen secondary" disabled>Limpar marcações</button>
+            </div>
+            <p id="selectionMessage">Salvar a seleção não apaga arquivos nem envia dados à internet.</p>
+        </section>
+        <p class="count" id="count"></p>
+        <section class="grid" id="grid" aria-label="Áudios">
+            <div class="empty">Conecte a pasta local para carregar os áudios.</div>
+        </section>
+        <p style="text-align:center;margin:28px 0"><button id="loadMore" class="listen" hidden>Carregar mais 60
+                áudios</button></p>
+        <footer>Atualização automática a cada 5 segundos enquanto a aba está visível. Os arquivos são lidos diretamente
+            da pasta autorizada no seu navegador, sem upload. Cópias com o mesmo hash aparecem uma vez. Itens em revisão
+            não significam aprovação ou ativação no bot. Transcrições da galeria podem conter erros.</footer>
+    </main>
+    <div class="playerbar" id="playerbar" hidden>
+        <div><strong id="playingTitle"></strong><small id="playingMeta"></small></div><audio id="mainPlayer"
+            controls></audio><button id="closePlayer" aria-label="Fechar reprodutor">×</button>
+    </div>
+    <script type="module">/*LOCAL_APPLICATION*/</script>
+</body>
+
+</html>
