@@ -17,10 +17,20 @@ que ele mesmo autorizar no próprio navegador. Receber o link não dá acesso
 ## Utilização
 
 Abra a página em uma aba do Edge ou Chrome, clique em Conectar pasta local
-e selecione a pasta ultron que contém manifesto.json e os áudios. A aplicação
+e selecione a pasta `output\audio` do bot para carregar todas as coleções.
+Também aceita a raiz `_bot`, a pasta `bordoes_ultron` ou uma coleção individual;
+nesses dois últimos casos aparecem somente as coleções dentro da pasta escolhida.
+A aplicação
 solicita apenas leitura. O navegador pode pedir nova autorização em outra sessão.
 
-Busca, filtros, favoritos e reprodução funcionam localmente. A pasta é relida
+Inclui as coleções de personagens e bordões, a expansão PT-BR e os catálogos
+de revisão. Estes últimos são identificados como em revisão, sem inferir que
+foram aprovados ou ativados no bot. Fontes brutas e históricos de manifestos
+não entram na listagem; o diálogo completo Ultron/Visão é uma exceção explícita.
+
+Busca por fala/personagem, filtros por personagem, coleção e duração, favoritos
+e reprodução funcionam localmente. A listagem carrega 60 cartões por vez e
+remove cópias pelo hash cadastrado. A pasta é relida
 a cada cinco segundos com a aba visível e ao retornar para a aba. A política
 de conteúdo bloqueia conexões feitas pela aplicação (connect-src 'none').
 
@@ -30,6 +40,15 @@ de conteúdo bloqueia conexões feitas pela aplicação (connect-src 'none').
 node --test local.test.mjs
 node build.mjs
 ```
+
+Para conferir uma biblioteca real com o mesmo leitor da página:
+
+```
+node inspect-gallery.mjs CAMINHO_DA_PASTA_AUDIO
+```
+
+Esse comando lê os JSON e metadados dos arquivos, sem copiar os áudios para
+o projeto. Testa também uma nova execução e o cache de manifestos.
 
 O build gera dist/index.html, um HTML autônomo. O workflow pages.yml testa,
 constrói e publica dist. A publicação depende de habilitar GitHub Pages com
