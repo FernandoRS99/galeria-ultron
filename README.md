@@ -36,6 +36,15 @@ de conteúdo bloqueia conexões feitas pela aplicação (connect-src 'none').
 
 ## Verificação e publicação
 
+A página inclui filtro por idioma, caixa de seleção em cada áudio, marcação
+de todos os resultados do filtro e download local da seleção em JSON. Marcar
+ou salvar não exclui arquivos. O JSON contém somente os itens escolhidos,
+com caminho relativo, identificador e hash para conferência posterior.
+As marcações persistem no navegador, inclusive entre páginas da listagem.
+O idioma é o registro do catálogo/ASR; ausência de registro não vira português.
+O falso positivo Chaves V2-049 foi reconferido com Whisper Medium local e é
+exibido como português sem modificar os manifestos do bot.
+
 ```
 node --test local.test.mjs
 node build.mjs

@@ -15,6 +15,21 @@ export async function findGallery(root){
   throw Error('Selecione a pasta audio dentro de output, para carregar todas as coleções.');
 }
 const pretty=s=>s.replaceAll('_',' ').replace(/(^|\s)(\S)/gu,(_,space,c)=>space+c.toUpperCase());
+export function itemLanguage(item,data={}){
+  // Reconferência local Medium em 19/11/2026: "Nem doeu!". O ASR Small
+  // havia marcado inglês com confiança 0,5234. Não altera o manifesto do bot.
+  if(item.id==='ultron_frases_v2_049')return 'pt';
+  const raw=String(item.idioma||item.idioma_detectado||item.asr_local?.idioma||data.idioma||'').toLowerCase();
+  if(/^pt(?:[-_].*)?$/.test(raw))return 'pt';
+  if(raw==='sem fala')return 'none';
+  return /^[a-z]{2,3}(?:[-_][a-z]+)?$/.test(raw)?raw.split(/[-_]/)[0]:'unknown';
+}
+export function selectionDocument(items,marked,folder){
+  return {version:1,operation:'revisar_remocao_galeria',deleted:false,folder,
+    created:new Date().toISOString(),items:items.filter(i=>marked.has(i.id)).map(i=>({
+      id:i.catalogId||i.id,title:i.title,path:pathParts(i.path).join('/'),sha256:i.hash||null,
+      author:i.author,collection:i.collection,language:i.language||'unknown'}))};
+}
 function collectionName(prefix,data){const parts=prefix.split('/').filter(Boolean);
   if(parts[0]==='bordoes_ultron')return pretty(parts[1]||'Bordões gerais');
   if(parts[0]?.startsWith('expansao_'))return 'Expansão PT-BR';
@@ -30,7 +45,7 @@ export function manifestItems(data,prefix=''){
     const path=prefix+relative,approval=String(i.aprovacao_final||i.aprovacao_proprietario||data.aprovacao_final||'');
     const review=i.ativo_no_bot===false||data.ativo_no_bot===false||/pendente|aguardando.revisao|candidat/i.test(String(i.estado||'')+' '+approval);
     const approved=!review&&/aprovado/i.test(String(i.estado||'')+' '+approval);
-    result.push({id:path,title:String(i.titulo||i.texto||i.id||relative),path,duration:i.duracao,
+    result.push({id:path,catalogId:i.id||relative,language:itemLanguage(i,data),title:String(i.titulo||i.texto||i.id||relative),path,duration:i.duracao,
       text:String(i.texto||i.transcricao_automatica||i.asr_local?.texto||''),kind:review?'revisao':'recorte',
       status:review?'Em revisão · não significa ativo no bot':approved?'Aprovado na galeria':'Cadastro local · confira o conteúdo',
       author:String(i.autor||data.personagem||collection),collection,category:String(i.categoria||i.grupo||''),
@@ -80,6 +95,8 @@ const $=id=>document.getElementById(id),fmt=s=>Math.floor(s/60)+':'+String(Math.
 const norm=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 let root=null,items=[],kind='all',signature='',reading=false,restored=null,visible=60,currentUrl=null,catalogCache=new Map();
 let favorites=new Set;try{favorites=new Set(JSON.parse(localStorage.getItem('ultron-local-favorites')||'[]'))}catch{}
+let marked=new Set;try{marked=new Set(JSON.parse(localStorage.getItem('ultron-removal-selection')||'[]'))}catch{}
+const languages={pt:'Português',en:'Inglês',es:'Espanhol',ja:'Japonês',none:'Sem fala',unknown:'Idioma não informado'};
 function el(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n}
 async function dbHandle(value){return new Promise((resolve,reject)=>{const req=indexedDB.open('ultron-local-folder',1);req.onupgradeneeded=()=>req.result.createObjectStore('settings');req.onerror=()=>reject(req.error);req.onsuccess=()=>{const db=req.result,tx=db.transaction('settings',value===undefined?'readonly':'readwrite'),store=tx.objectStore('settings'),op=value===undefined?store.get('folder'):store.put(value,'folder');op.onsuccess=()=>resolve(op.result);op.onerror=()=>reject(op.error);tx.oncomplete=()=>db.close()}})}
 async function play(item){try{if(!root)throw Error('Conecte a pasta da galeria primeiro.');const f=await readLocalFile(root,item.path);$('mainPlayer').pause();if(currentUrl)URL.revokeObjectURL(currentUrl);currentUrl=URL.createObjectURL(f);$('mainPlayer').src=currentUrl;$('playingTitle').textContent=item.title;$('playingMeta').textContent=item.author+' · '+fmt(item.duration)+' · arquivo local';$('playerbar').hidden=false;await $('mainPlayer').play()}catch(e){$('syncText').textContent='Não foi possível abrir o áudio: '+e.message}}
@@ -87,17 +104,24 @@ function facets(){for(const [id,field,label] of [['author','author','Todos os pe
   const select=$(id),selected=select.value;select.replaceChildren(new Option(label,''));const counts=new Map();for(const i of items)counts.set(i[field],(counts.get(i[field])||0)+1);
   for(const [name,count] of [...counts].sort(([a],[b])=>a.localeCompare(b,'pt-BR')))select.add(new Option(name+' ('+count+')',name));if(counts.has(selected))select.value=selected;
 }}
+function filtered(){
+  const q=norm($('search').value),min=Number($('minDuration').value),language=$('language').value;
+  return items.filter(i=>(kind==='all'||kind==='favorites'&&favorites.has(i.id)||kind===i.kind)&&(!$('author').value||i.author===$('author').value)&&(!$('collection').value||i.collection===$('collection').value)&&(!language||(i.language||'unknown')===language)&&i.duration>=min&&norm(i.title+' '+i.text+' '+i.author+' '+i.collection+' '+i.category).includes(q));
+}
+function selectionStatus(){const count=items.filter(i=>marked.has(i.id)).length;$('selectionCount').textContent=count+' áudio'+(count===1?' marcado':'s marcados')+' para remover';$('exportSelection').disabled=!count;$('clearSelection').disabled=!marked.size}
+function saveMarks(){localStorage.setItem('ultron-removal-selection',JSON.stringify([...marked]));selectionStatus()}
 function render(){
-  const q=norm($('search').value),min=Number($('minDuration').value),selected=items.filter(i=>(kind==='all'||kind==='favorites'&&favorites.has(i.id)||kind===i.kind)&&(!$('author').value||i.author===$('author').value)&&(!$('collection').value||i.collection===$('collection').value)&&i.duration>=min&&norm(i.title+' '+i.text+' '+i.author+' '+i.collection+' '+i.category).includes(q));
+  const selected=filtered();
   selected.sort((a,b)=>$('sort').value==='long'?b.duration-a.duration:$('sort').value==='new'?b.updated-a.updated:a.title.localeCompare(b.title,'pt-BR'));
   $('count').textContent=selected.length+' áudios encontrados · exibindo '+Math.min(visible,selected.length);
   const frag=document.createDocumentFragment();for(const i of selected.slice(0,visible)){
-    const c=el('article',undefined,'card'),m=el('div',undefined,'meta');m.append(el('span',({dialogo:'DIÁLOGO',revisao:'EM REVISÃO',recorte:'RECORTE'})[i.kind],'kind'),el('span',fmt(i.duration)));c.append(m,el('h3',i.title),el('p',i.author+' · '+i.collection,'meta'),el('p',i.text||'Arquivo de áudio da sua galeria.','transcript'));
+    const c=el('article',undefined,'card'),m=el('div',undefined,'meta');m.append(el('span',({dialogo:'DIÁLOGO',revisao:'EM REVISÃO',recorte:'RECORTE'})[i.kind],'kind'),el('span',fmt(i.duration)));c.append(m,el('h3',i.title),el('p',i.author+' · '+i.collection,'meta'),el('p',(languages[i.language]||i.language||'Idioma não informado')+' · '+(i.catalogId||'Diálogo'),'meta'),el('p',i.text||'Arquivo de áudio da sua galeria.','transcript'));
     const b=el('button','Ouvir áudio local');b.className='listen';b.onclick=()=>play(i);c.append(b);
+    const label=el('label',undefined,'mark-removal'),check=el('input');check.type='checkbox';check.checked=marked.has(i.id);check.setAttribute('aria-label','Marcar para remover: '+i.title);check.onchange=()=>{check.checked?marked.add(i.id):marked.delete(i.id);saveMarks();c.classList.toggle('marked',check.checked)};label.append(check,el('span','Marcar para remover'));c.append(label);c.classList.toggle('marked',marked.has(i.id));
     const foot=el('div',undefined,'card-foot'),fav=el('button',favorites.has(i.id)?'★ Favorito':'☆ Favoritar');fav.className='favorite';fav.setAttribute('aria-pressed',String(favorites.has(i.id)));fav.onclick=()=>{favorites.has(i.id)?favorites.delete(i.id):favorites.add(i.id);localStorage.setItem('ultron-local-favorites',JSON.stringify([...favorites]));render()};foot.append(fav,el('span','No seu computador'));c.append(foot,el('small',i.status,'meta'));frag.append(c);
   }
   if(!selected.length)frag.append(el('div',root?'Nenhum áudio corresponde a estes filtros.':'Conecte a pasta output\\audio para carregar todas as coleções. Nenhum áudio será enviado à internet.','empty'));
-  $('grid').replaceChildren(frag);$('loadMore').hidden=visible>=selected.length;
+  $('grid').replaceChildren(frag);$('loadMore').hidden=visible>=selected.length;selectionStatus();
 }
 async function refresh(){
   if(!root||reading)return;reading=true;if(!items.length)$('syncText').textContent='Lendo os catálogos e conferindo os arquivos locais…';
@@ -117,7 +141,11 @@ async function connect(){try{
   const g=await findGallery(picked);root=g;restored=g;items=[];signature='';catalogCache=new Map();visible=60;$('mainPlayer').pause();$('playerbar').hidden=true;try{await dbHandle(g)}catch{}
   $('connect').textContent='Trocar pasta';$('connect').onclick=()=>{restored=null;connect()};await refresh();
 }catch(e){if(e.name!=='AbortError')$('syncText').textContent=e.message}}
-const reset=()=>{visible=60;render()};$('connect').onclick=connect;$('refresh').onclick=refresh;$('search').oninput=reset;for(const id of ['sort','author','collection','minDuration'])$(id).onchange=reset;
+const reset=()=>{visible=60;render()};$('connect').onclick=connect;$('refresh').onclick=refresh;$('search').oninput=reset;for(const id of ['sort','author','collection','minDuration','language'])$(id).onchange=reset;
+$('markFiltered').onclick=()=>{for(const i of filtered())marked.add(i.id);saveMarks();render()};
+$('clearSelection').onclick=()=>{marked.clear();saveMarks();render()};
+$('exportSelection').onclick=()=>{const data=selectionDocument(items,marked,root?.name||''),blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download='selecao-remover-galeria-'+Date.now()+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);$('selectionMessage').textContent='Seleção salva na pasta de downloads. Nenhum áudio foi apagado. Avise no chat que salvou; não precisa digitar os códigos.'};
+const requestedLanguage=new URLSearchParams(location.search).get('idioma');if(requestedLanguage&&[...$('language').options].some(o=>o.value===requestedLanguage))$('language').value=requestedLanguage;
 $('loadMore').onclick=()=>{visible+=60;render()};document.querySelectorAll('[data-kind]').forEach(b=>b.onclick=()=>{kind=b.dataset.kind;document.querySelectorAll('[data-kind]').forEach(x=>x.classList.toggle('active',x===b));reset()});$('closePlayer').onclick=()=>{$('mainPlayer').pause();$('playerbar').hidden=true};
 async function restore(){try{restored=await dbHandle();if(restored&&await restored.queryPermission({mode:'read'})==='granted'){root=await findGallery(restored);$('connect').textContent='Trocar pasta';$('connect').onclick=()=>{restored=null;connect()};await refresh()}else if(restored)$('syncText').textContent='Pasta lembrada. Clique em Conectar pasta local para renovar a permissão.'}catch{}}
 render();restore();setInterval(()=>{if(!document.hidden)refresh()},5000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});

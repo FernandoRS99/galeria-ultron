@@ -1,4 +1,4 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {pathParts,readLocalFile,manifestItems,loadGallery,findGallery,deduplicate} from './gallery.js';import {readFileSync} from 'node:fs';
+import test from 'node:test';import assert from 'node:assert/strict';import {pathParts,readLocalFile,manifestItems,loadGallery,findGallery,deduplicate,itemLanguage,selectionDocument} from './gallery.js';import {readFileSync} from 'node:fs';
 test('somente caminhos relativos seguros',()=>{for(const p of ['../senha.txt','C:/Windows/a','a/../b','/a','a//b'])assert.throws(()=>pathParts(p));assert.deepEqual(pathParts('amostras/01.wav'),['amostras','01.wav'])});
 test('leitura local nunca pede criacao ou escrita',async()=>{const file={name:'01.wav'};const root={getDirectoryHandle:async(...args)=>{assert.deepEqual(args,['amostras']);return {getFileHandle:async(...args)=>{assert.deepEqual(args,['01.wav']);return {getFile:async()=>file}}}}};assert.equal(await readLocalFile(root,'amostras/01.wav'),file)});
 test('manifesto conserva texto e rejeita arquivo externo',()=>{const item={id:'01',titulo:'Teste',arquivo:'amostras/01.wav',duracao:3,transcricao_automatica:'Fala original'};assert.equal(manifestItems({recortes:[item]})[0].text,'Fala original');assert.throws(()=>manifestItems({recortes:[{...item,arquivo:'../fora.wav'}]}))});
@@ -34,4 +34,21 @@ test('deduplicacao conserva IDs iguais de personagens diferentes',()=>{
 test('cache de manifesto nao bloqueia nova execucao com arquivo adicionado',async()=>{
   const children={'manifesto.json':catalog([clip('novo')])},root=folder('ultron',children),cache=new Map();
   assert.equal((await loadGallery(root,cache)).items.length,0);children['novo.ogg']=file('novo.ogg');assert.equal((await loadGallery(root,cache)).items.length,1);
+});
+test('idioma preserva incerteza e corrige falso positivo Chaves reconferido',()=>{
+  assert.equal(itemLanguage({idioma:'en'}),'en');assert.equal(itemLanguage({idioma:'pt-BR'}),'pt');
+  assert.equal(itemLanguage({}, {idioma:'Fontes originais; falas pt-BR e risadas'}),'unknown');
+  assert.equal(itemLanguage({id:'ultron_frases_v2_049',idioma:'en'}),'pt');
+});
+test('exportacao leva somente marcados e nao autoriza nem executa exclusao',()=>{
+  const items=[{id:'a',catalogId:'v2_070',path:'catalogo/070.mp3',title:'Primeiro',hash:'a'.repeat(64)},
+               {id:'b',path:'catalogo/071.mp3',title:'Segundo'}];
+  const result=selectionDocument(items,new Set(['a']),'audio');assert.equal(result.deleted,false);
+  assert.equal(result.operation,'revisar_remocao_galeria');assert.equal(result.items.length,1);
+  assert.equal(result.items[0].id,'v2_070');assert.equal(result.items[0].path,'catalogo/070.mp3');
+  assert.equal(result.items[0].sha256,'a'.repeat(64));assert.equal(items.length,2);
+});
+test('selecao salva inclui itens marcados alem dos primeiros sessenta',()=>{
+  const items=Array.from({length:132},(_,n)=>({id:String(n),path:n+'.ogg',title:String(n)}));
+  assert.equal(selectionDocument(items,new Set(items.map(i=>i.id)),'audio').items.length,132);
 });
